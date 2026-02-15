@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ICSE Class 10 Board MCQ Quiz</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+font-family:Poppins,sans-serif;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+color:white;
+}
+.container{
+width:90%;
+max-width:950px;
+background:rgba(255,255,255,0.12);
+backdrop-filter:blur(20px);
+border-radius:25px;
+padding:35px;
+max-height:90vh;
+overflow:auto;
+}
+h1{
+font-size:34px;
+font-weight:800;
+background:linear-gradient(to right,#1fe4f5,#3fbafe,#a964ff,#ff7eb3);
+-webkit-background-clip:text;
+color:transparent;
+margin-bottom:20px;
+}
+h3{margin:10px 0;}
+button{
+width:100%;
+padding:12px;
+margin:6px 0;
+border:none;
+border-radius:12px;
+font-size:16px;
+font-weight:600;
+cursor:pointer;
+background:linear-gradient(45deg,#00c3ff,#ffff1c);
+}
+.submit{background:linear-gradient(45deg,#00ff87,#60efff);}
+.back{background:linear-gradient(45deg,#ff9a9e,#fad0c4);}
+.page{display:none;}
+.timerScore{
+display:flex;
+justify-content:space-between;
+margin-bottom:15px;
+font-size:18px;
+}
+.correct{background:#00ff87!important;}
+.wrong{background:#ff6b6b!important;}
+</style>
+</head>
+
+<body>
+
+<!-- HOME -->
+<div class="page" id="home" style="display:block">
+<div class="container">
+<h1>🎓 ICSE Class 10 MCQ Quiz</h1>
+
+<button onclick="startQuiz('maths')">📐 Maths</button>
+<button onclick="startQuiz('physics')">🔬 Physics</button>
+<button onclick="startQuiz('chemistry')">⚗ Chemistry</button>
+<button onclick="startQuiz('biology')">🧬 Biology</button>
+<button onclick="startQuiz('computer')">💻 Computer</button>
+<button onclick="startQuiz('history')">🏛 History & Civics</button>
+<button onclick="startQuiz('geography')">🌍 Geography</button>
+<button onclick="startQuiz('english1')">✍ English I</button>
+<button onclick="startQuiz('english2')">📘 English II</button>
+
+</div>
+</div>
+
+<!-- QUIZ -->
+<div class="page" id="quizPage">
+<div class="container">
+<h1 id="title"></h1>
+
+<div class="timerScore">
+<div>⏳ <span id="time">900</span>s</div>
+<div>⭐ <span id="score">0</span></div>
+</div>
+
+<div id="quiz"></div>
+
+<button class="submit" onclick="submitQuiz()">Submit</button>
+<button class="back" onclick="goHome()">Back</button>
+</div>
+</div>
+
+<script>
+let score=0,time=900,timer,questions=[];
+
+/* SUBJECT QUESTION BANKS */
+/* ---- unchanged ---- */
+const maths=[
+
+{q:"The total amount of money needed to run the company is called:",o:["Shares","Capital","Dividend","Principal"],a:"Capital"},
+{q:"Sujata has a recurring deposit account in a bank for 2 years at 6% p.a. simple interest. If she gets ₹1200 as interest at the time of maturity, then her monthly instalment is: ",o:["₹500","₹600","₹700","₹800"],a:"₹800"},
+{q:"A man deposited ₹1000 per month in a recurring deposit account for 3 years at 8% p.a. The maturity value is:",o:["₹44,000","₹40,000","₹40,440","₹44,444"],a:"₹40,440"},
+{q:"A share is said to be ____, if its market value is less than its face value.",o:["At par","Above par","Below par","Premium"],a:"Below par"},
+{q:"​Shahrukh has some shares of ₹50 of a company paying 15% dividend. If his annual income is ₹3000, then the number of shares he possesses is :",o:["400","600","800","200"],a:"400"},
+{q:"A dealer in Mumbai sold a washing machine to a consumer in Mumbai for ₹18,000. If the rate of GST is 18%, then SGST is:",o:["₹1620","₹3240","nil","none of these"],a:"₹1620"},
+{q:"A dealer in Agra sold an LED to a customer in Agra for ₹28,000. If SGST is ₹2,520, then the rate of GST is:",o:["12%","18%","9%","28%"],a:"18%"},
+{q:"Goods from Delhi are sold to Ranchi (Jharkhand) for ₹20,000 and then from Ranchi to Cuttack (Odisha). If the rate of GST is 18%, and the profit made at Ranchi is ₹5,000, then the net GST payable by the dealer in Ranchi is:",o:[" ₹1000"," ₹900"," ₹850"," ₹875"],a:"₹900"},
+{q:"​The face value of a share:",o:["Changes every year","Changes from time to time","Always remains the same","None of these"],a:"Always remains the same"},
+{q:"Karan deposited ₹2000 per month for 3 years in a recurring deposit account. If the rate of interest is 11% p.a., the amount he gets on maturity is:",o:["₹72,000"," ₹80,000"," ₹82,210","₹84,210"],a:"₹84,210"},
+{q:"​If Kabir invests ₹10320 on ₹100 shares at a discount of ₹14, then the number of shares he buys is :",o:["110","120","150","100"],a:"120"},
+{q:"IGST is charged on:",o:["interstate transaction","intrastate transaction"," both (a) and (b)","none of these"],a:"interstate transaction"},
+{q:"​A dealer in Patna (Bihar) supplies goods worth ₹15,000 to a dealer in Sonepat (Haryana). The dealer in Sonepat supplies the same goods to a dealer in Rohtak (Haryana) at a profit of ₹3,000. If the rate of GST is 18%, then the net GST paid by the dealer in Sonepat is:",o:[" ₹540","₹700","₹720","nil"],a:"₹540"},
+{q:"Mr. Awasthi has a 4 year time deposit account and deposits ₹650 per month. If he received ₹5096 as interest at the time of maturity, the rate of interest is:",o:[" 8% p.a.","8.5% p.a.","9% p.a.","10% p.a."],a:"8% p.a."},
+{q:"Find the roots of the quadratic equation x² − 5x + 6 = 0.",o:["2,3","1,6","−2,−3","3,4"],a:"2,3"},
+
+];
+const physics=[
+{q:"SI unit of force",o:["Newton","Joule","Watt","Pascal"],a:"Newton"},
+{q:"A pendulum is oscillating freely. Its bob has:",o:["only kinetic energy","maximum kinetic energy at extreme position","maximum potential energy at its mean position","a constant energy, which is the sum of potential and kinetic energy"],a:"a constant energy, which is the sum of potential and kinetic energy"},
+{q:"A crane pulls up a car of mass 500 kg to a vertical height of 4 m. Then work done by the crane is: (g = 9.8 m s⁻²)",o:["18000 J","18600 J","19600 J","16900 J"],a:"19600 J"},
+{q:"A boy of mass 40 kg climbs up a flight of 30 steps each 20 cm high in 2 minutes and a girl of mass 30 kg does the same in 1.5 minutes. The ratio of work done by boy and the girl is:",o:["2:3","3:2","3:4","4:3"],a:"4:3"},
+{q:"The SI unit of work is joule. It is expressed in terms of mass, length and time as:",o:["kg m² s⁻³","kg m³ s⁻²","kg² m² s⁻²","kg m² s⁻²"],a:"kg m² s⁻²"},
+{q:"A glass block 3.0 cm thick is placed over a stamp. The refractive index of glass is 1.54. Then the height through which the image of stamp raised will be:",o:[" 1 cm","1.06 cm"," 1.5 cm"," 1.45 cm"],a:"1.06 cm"},
+{q:"The point on the principal axis of a thin lens, such that a ray of light directed towards it, passes undeviated through it, is called:",o:["focus","centre of curvature","optical centre","pole"],a:"optical centre"},
+{q:"The practical application based on the reflection of sound is:",o:["megaphone","sound board","sonometer","both (a) and (b)"],a:"both (a) and (b)"},
+{q:"The minimum distance between two parallel cliffs which are 99 m apart. The person fires a gun and hears two successive echoes after 0.12 s and 0.4 s. Then the distance of the person from nearer cliff is:",o:["22 m","33 m","44 m","66 m"],a:"33 m"},
+{q:"A conductor at 4.2 K is found to offer no resistance. Such a conductor is called",o:["zero conductor","superconductor","absolute conductor","none of these"],a:"superconductor"},
+{q:"​A work of 400 J is done in moving a 10000 C charge from one point to another point in an electric field. The p.d. between the points is:",o:["4.0V"," 0.4V"," 0.004V","0.04V"],a:"0.04V"},
+{q:"Which is not used for heating element of a heating appliances?",o:["Constantan wire","Tungsten wire"," Eureka wire","Manganin wire"],a:"Tungsten wire"},
+{q:" A strong current is passed through a freely suspended solenoid. The solenoid is disturbed so that it is free to revolve around vertical axis. The solenoid will come to rest in :",o:["North-South direction","East-West direction"," any direction","none of these"],a:"North-South direction"},
+{q:"The atoms of different elements having same mass number, but different atomic numbers are called  :",o:["isotopes","isotones","isobars","none of these"],a:"isobars"},
+{q:"When the nucleus of a radioactive element, such as uranium is hit by a slow moving neutron, such that it splits into two almost equal nuclei with the release of more neutrons and energy, then the process is called :",o:[" nuclear fusion","nuclear fission"," chemical reaction"," none of these"],a:"nuclear fission"},
+];
+const chemistry=[
+{q:"Chemical formula of water",o:["H₂O","CO₂","O₂","NaCl"],a:"H₂O"},
+{q:"Which one is a metalloid?",o:["Aluminium","Silicon","Sulphur","Carbon"],a:"Silicon"},
+{q:"The term used, when an isolated atom in a gaseous state accepts an electron to form an anion with release of energy, is:",o:["electron affinity","ionisation potential","electronegativity","none of these"],a:"electron affinity"},
+{q:"While going down the group 16 of the long form of the periodic table, the electron affinity:",o:["decreases","hardly changes","increases","none of these"],a:"decreases"},
+{q:"On the basis of electron configuration of valence shell, which one is odd?",o:["Argon","Argon","Helium","Neon"],a:"Helium"},
+{q:"The metallic oxide which dissolve in water to form alkali is:",o:["K_2O","Al_2O_3"," ZnO","CuO"],a:"K_2O"},
+
+
+];
+const biology=[
+{q:"Unit of life",o:["Cell","Tissue","Organ","System"],a:"Cell"},
+{q:"Name the phase which comes after mitotic phase.",o:["G₁ phase","S phase","G₂ phase"," M phase"],a:"G₁ phase"},
+{q:"Skin colour of human is an example of",o:["Codominance","Monogenic traits","Polygenic traits","Incomplete dominance"],a:"Polygenic traits"},
+{q:"The highest water potential (capacity to move out to high concentrated solution) is that of",o:["Pure water","Honey","10% sugar solution","10% salt solution"],a:"Pure water"},
+{q:"How much water is transpired from the absorbed water?",o:[" 70-75%","90-95 %","10-15%","40-50%"],a:"90-95 %"},
+
+
+];
+const computer=[
+{q:"Which data type is used to store whole numbers?",o:["float","double","int","char"],a:"int"},
+{q:"Which operator is used to compare two values?",o:["=","!=","+=","++"],a:""},
+{q:"Which statement is used to take a decision?",o:["if","for","while","break"],a:"if"},
+
+
+
+];
+const history=[
+{q:"Father of Indian Constitution",o:["B.R. Ambedkar","Gandhi","Nehru","Patel"],a:"B.R. Ambedkar"},
+
+
+];
+const geography=[
+{q:"Largest continent",o:["Asia","Africa","Europe","America"],a:"Asia"},
+
+
+];
+const english1=[{q:"Figure of speech in 'The moon smiled'",o:["Personification","Simile","Metaphor","Irony"],a:"Personification"}];
+const english2=[{q:"Author of Julius Caesar",o:["Shakespeare","Milton","Wordsworth","Keats"],a:"Shakespeare"}];
+
+const subjects={maths,physics,chemistry,biology,computer,history,geography,english1,english2};
+
+/* ENGINE */
+
+function startQuiz(sub){
+score=0;
+time=900;
+questions=subjects[sub].map(q=>({...q,done:false}));
+
+document.getElementById("score").innerText=0;
+document.getElementById("time").innerText=time;
+document.getElementById("title").innerText=sub.toUpperCase()+" – ICSE STD 10";
+
+document.getElementById("home").style.display="none";
+document.getElementById("quizPage").style.display="block";
+
+loadQuiz();
+startTimer();
+}
+
+function loadQuiz(){
+let html="";
+questions.forEach((x,i)=>{
+html+=`<h3>${i+1}. ${x.q}</h3>`;
+x.o.forEach(op=>{
+html+=`<button onclick="check(this,${i},'${op}')">${op}</button>`;
+});
+});
+document.getElementById("quiz").innerHTML=html;
+}
+
+/* ✅ UPDATED LOGIC – SHOW CORRECT ANSWER */
+function check(btn,i,opt){
+if(questions[i].done) return;
+questions[i].done=true;
+
+const buttons = btn.parentElement.querySelectorAll("button");
+
+if(opt===questions[i].a){
+btn.classList.add("correct");
+score++;
+document.getElementById("score").innerText=score;
+}else{
+btn.classList.add("wrong");
+buttons.forEach(b=>{
+if(b.innerText===questions[i].a){
+b.classList.add("correct");
+}
+});
+}
+}
+
+function startTimer(){
+clearInterval(timer);
+timer=setInterval(()=>{
+time--;
+document.getElementById("time").innerText=time;
+if(time<=0){
+submitQuiz();
+}
+},1000);
+}
+
+function submitQuiz(){
+clearInterval(timer);
+alert(`Score: ${score} / ${questions.length}`);
+goHome();
+}
+
+function goHome(){
+clearInterval(timer);
+document.getElementById("quizPage").style.display="none";
+document.getElementById("home").style.display="block";
+}
+</script>
+
+</body>
+</html>
